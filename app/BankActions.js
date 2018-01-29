@@ -12,25 +12,25 @@ let BankActions = {
   createAccount() {
     AppDispatcher.dispatch({
       type: bankConstants.CREATED_ACCOUNT,
-      ammount: 0
+      amount: 0
     });
   },
   /**
-   * @param  {number} ammount 입금할 금액
+   * @param  {number} amount 입금할 금액
    */
-  depositIntoAccount(ammount) {
+  depositIntoAccount(amount) {
     AppDispatcher.dispatch({
       type: bankConstants.DEPOSITED_INTO_ACCOUNT,
-      ammount: ammount
+      amount: amount
     });
   },
   /**
-   * @param  {number} ammount 출금할 금액
+   * @param  {number} amount 출금할 금액
    */
-  withdrawFromAccount(ammount) {
+  withdrawFromAccount(amount) {
     AppDispatcher.dispatch({
       type: bankConstants.WITHDREW_FROM_ACCOUNT,
-      ammount: ammount
+      amount: amount
     });
   }
 

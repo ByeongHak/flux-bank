@@ -7,34 +7,32 @@
  *  뷰에 알림
  * - 이벤트를 내보내기 위해 이벤트 방출기(event emitter)패키지 : fbemitter 설치
  * (2단계) 플럭스 유틸 스토어를 활용
- *  - 이벤트 방출기의 인스턴스를 직접 만들 필요가 없다.
- *  - 수동으로 스토어를 디스패치에 등록하지 않는다. 대신 스토어의 인스턴스를 생성하고 이를 디스패처에 인수로 전달한다.
+ * - 이벤트 방출기의 인스턴스를 직접 만들 필요가 없다.
+ * - 수동으로 스토어를 디스패치에 등록하지 않는다. 대신 스토어의 인스턴스를 생성하고 이를 디스패처에 인수로 전달한다.
+ * (3단계)  플럭스 유틸 리듀스스토어(ReduceStore) 활용
+ * - 코드를 더 깔끔하게 작성할 수 있는 것은 물론, 기능 기반이 변경 불가 자료구조와 밀접하게 연관돼 있어
+ *  리액트 같은 수준 높은 선언적 프로그래미잉 가능하며 테스트 같은 다른 영역에도 긍정적임.
  */
-import {Store} from 'flux/utils';
+import {ReduceStore} from 'flux/utils';
 import AppDispatcher from './AppDispatcher';
 import bankConstants from './constants';
 
 let balance = 0;
 
-class BankBalanceStore extends Store {
-  getState(){
-    return balance;
+class BankBalanceStore extends ReduceStore {
+  getInitialState(){
+    return 0;
   }
-
-  __onDispatch(action){
+  reduce(state, action){
     switch(action.type){
       case bankConstants.CREATED_ACCOUNT:
-        balance = 0;
-        this.__emitChange();
-        break;
+        return 0;
       case bankConstants.DEPOSITED_INTO_ACCOUNT:
-        balance =   balance + action.ammount;
-        this.__emitChange();
-        break;
+        return state + action.amount;
       case bankConstants.WITHDREW_FROM_ACCOUNT:
-        balance = balance - action.ammount;
-        this.__emitChange();
-        break;
+        return state - action.amount;
+      default:
+        return state;
     }
   }
 }
