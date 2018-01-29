@@ -1,32 +1,19 @@
 /**
  * UI 컴포넌트 View
  * 스토어와 액션을 모두 임포트 
+ * (2단계) 플럭스 유틸의 컨테이너 고차 함수 이용
  */
 import React, { Component } from 'react';
 import { render } from 'react-dom';
 import BankBalanceStore from './BankBalanceStore'; //스토어
 import BankActions from './BankActions'; //액션
+import {Container} from 'flux/utils';
 
 
 class App extends Component {
   constructor(){
     super(...arguments);
     BankActions.createAccount();
-    this.state = {
-      balance: BankBalanceStore.getState()
-    }
-  }
-  // componetDidMount(), componentWillUnmount()를 이용해 BankBalanceStore의 변경을 수신(구독)하는 작업을 관리
-  componentDidMount(){
-    this.storeSubscription = BankBalanceStore.addListener(data => this.handleStoreChange(data));
-  }
-
-  componentWillUnmount(){
-    this.storeSubscription.remove();
-  }
-
-  handleStoreChange(){
-    this.setState({balance: BankBalanceStore.getState()});
   }
 
   deposit() {
@@ -51,8 +38,13 @@ class App extends Component {
           <button onClick={this.deposit.bind(this)}>Deposit</button>
         </div>
       </div>
-
     );
   }
 }
-render(<App/>, document.getElementById('root'));
+
+App.getStores = () => ([BankBalanceStore]);
+App.calculateState = (prevState) => ({balance:BankBalanceStore.getState()});
+
+const AppContainer = Container.create(App);
+
+render(<AppContainer />, document.getElementById('root'));
